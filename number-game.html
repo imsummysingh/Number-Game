@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+<title>Inkoop Assessment Code</title>
+</head>
+<body>
+    <h1>Number Game</h1>
+    <p>Build a game in js with following rules</p>
+    <ul>
+        <li>User has 1000 INR when he starts the game</li>
+        <li>Every try(click on start) is charged 100 INR</li>
+        <li>Game is over if user has less than 100 INR</li>
+        <li>Every try generates three random numbers, each random number is in 0-9 range</li>
+        <li>If all the numbers are odd/even (eg. 2 4 6), user gets 300 INR</li>
+        <li>If the numbers are in sequence with difference of 1 in any order (eg. 2 3 4 or 3 2 4 or 4 6 5), user gets 800 INR</li>
+        <li>If all the numbers are same (eg. 4 4 4), user gets 1000 INR</li>
+        <li>Else user gets no money</li>
+    </ul>
+    </div>
+
+    <h3 id="replace">Game</h3>
+    <div>You have <span id="moneyLeft">1000</span> INR</div>
+    <button id="startButton" onclick="startGame()">Start</button>
+    <h3 id="randomNumbers">1 2 3</h3>
+    <div id="message"></div>
+    <script type="text/javascript">
+        function generateRandomNumber(){
+            return Math.floor((Math.random() * 100) % 10);
+        }
+
+        var firstTime = true;
+
+        function startGame(){
+            if(document.querySelector("h1")){
+                document.querySelector("h1").remove();
+            }
+            if(document.querySelector("ul")){
+                document.querySelector("ul").remove();
+            }
+
+            var randomNumbers = document.querySelector("#randomNumbers");
+            var paragraph = document.querySelector("p"); 
+            var messageDom = document.querySelector("#message");
+            var message = "You were unlucky this time.";
+            paragraph.innerHTML = "The random numbers are:";
+            var replace = document.querySelector("#replace"); 
+            if(replace){
+                randomNumbers.remove();
+                randomNumbers = document.createElement("h3");
+                randomNumbers.id =  "randomNumbers";
+                randomNumbers.innerHTML = "";
+                replace.parentNode.replaceChild(randomNumbers, replace)
+            }
+
+
+            var moneyLeft = document.querySelector("#moneyLeft")
+            var money = parseInt(moneyLeft.innerText)
+            if(money<100)
+            {
+                messageDom.innerHTML ="Game Over";
+                document.getElementById('startButton').onclick = function() {
+                    document.getElementById('startButton').disabled=true;
+                 }   
+                 return;
+            }
+            var a = generateRandomNumber(), b = generateRandomNumber(), c = generateRandomNumber();
+
+            money -= 100;
+            if(a === b && b === c){
+                message="You were lucky this time, you got 1000 INR as all the numbers are same.";
+                money+=1000;
+            } else if(Math.abs(a-b) === 1 && Math.abs(b-c) === 1 && Math.abs(a-c) === 1){
+                message="You were lucky this time,you got 800 INR as all the numbers have difference 1.";
+                money+=800;
+            } else if(a%2 === b%2 && b%2 === c%2){
+                message="You were lucky this time,you got 300 INR as all the numbers are either odd/even.";
+                money+=300;
+            }
+            messageDom.innerHTML = message
+            moneyLeft.innerText = money;
+            randomNumbers.innerHTML = a + " " + b + " " + c;  
+
+            if(firstTime){
+                firstTime = false;
+                document.querySelector("body").appendChild(document.getElementById("startButton"))
+            }
+        }
+    </script>
+</body>
+</html>
